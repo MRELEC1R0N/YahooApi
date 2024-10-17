@@ -18,12 +18,14 @@ The Stock Market Analysis API provides a set of endpoints to retrieve and compar
    ```sh
    git clone https://github.com/yourusername/stock-market-analysis-api.git
    cd stock-market-analysis-api
+   ```
 
 
 2. **Create a virtual environment:**
-    ```python -m venv venv
+    ```sh
+    python -m venv venv
     source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-
+   
 3. **Install the dependencies:**
     ```pip install -r requirements.txt
 
