@@ -3,15 +3,15 @@ from bs4 import BeautifulSoup
 from .stock_info import get_stock_info
 from .quote_data import get_quote_data
 from .historical_data import get_historical_data
-from .industry_info import get_company_sector_and_industry
+from .industry_info import get_third_href_link
 
 def compare_companies(stock_symbol, num_companies=5, include_historical=False):
-    sector_and_industry_data = get_company_sector_and_industry(stock_symbol)
-    if not sector_and_industry_data or 'error' in sector_and_industry_data:
-        return {'error': 'Failed to retrieve sector and industry data for the given company.'}
+    class_name = "yf-kznos4"
+    third_href_link = get_third_href_link(stock_symbol, class_name)
+    if 'error' in third_href_link:
+        return {'error': third_href_link['error']}
 
-    industry_link = sector_and_industry_data['industry_link']
-    search_url = f'https://finance.yahoo.com{industry_link}'
+    search_url = f'https://finance.yahoo.com{third_href_link}'
 
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'

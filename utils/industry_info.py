@@ -1,8 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
-def get_company_sector_and_industry(stock_symbol):
-    stock_url = f'https://finance.yahoo.com/quote/{stock_symbol}/profile'
+def get_third_href_link(stock_symbol, class_name):
+    stock_url = f'https://finance.yahoo.com/quote/{stock_symbol}'
 
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
@@ -13,36 +13,27 @@ def get_company_sector_and_industry(stock_symbol):
         response.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
 
         soup = BeautifulSoup(response.text, 'html.parser')
-        # Look for the sector and industry information in the profile page
-        sector_element = soup.find('a', {'data-ylk': 'elm:itm;elmt:link;itc:0;sec:qsp-company-overview;subsec:profile;slk:Technology'})
-        industry_element = soup.find('a', {'data-ylk': 'elm:itm;elmt:link;itc:0;sec:qsp-company-overview;subsec:profile;slk:Consumer%20Electronics'})
-
-        if sector_element and industry_element:
-            sector = sector_element.get_text(strip=True)
-            sector_link = sector_element['href']
-            industry = industry_element.get_text(strip=True)
-            industry_link = industry_element['href']
-            return {
-                'sector': sector,
-                'sector_link': sector_link,
-                'industry': industry,
-                'industry_link': industry_link
-            }
+        # Find the div with the specified class name
+        div_element = soup.find('div', class_=class_name)
+        if div_element:
+            links = div_element.find_all('a', href=True)
+            if len(links) >= 3:
+                return links[2]['href']
+            else:
+                return {'error': 'Less than 3 href links found.'}
         else:
-            return {'error': 'Sector or industry information not found.'}
+            return {'error': f'No element found with class name: {class_name}'}
     except requests.exceptions.RequestException as e:
-        return {'error': f'Failed to retrieve sector and industry data. Error: {str(e)}'}
+        return {'error': f'Failed to retrieve data. Error: {str(e)}'}
     except AttributeError:
-        return {'error': 'Failed to parse sector and industry data. The structure of the Yahoo Finance page may have changed.'}
+        return {'error': 'Failed to parse data. The structure of the Yahoo Finance page may have changed.'}
 
 # Test the function
 if __name__ == "__main__":
-    stock_symbol = "AAPL"
-    sector_and_industry_data = get_company_sector_and_industry(stock_symbol)
-    if 'error' not in sector_and_industry_data:
-        print(f"Sector: {sector_and_industry_data['sector']}")
-        print(f"Sector Link: {sector_and_industry_data['sector_link']}")
-        print(f"Industry: {sector_and_industry_data['industry']}")
-        print(f"Industry Link: {sector_and_industry_data['industry_link']}")
+    stock_symbol = "TSLA"
+    class_name = "yf-kznos4"
+    third_href_link = get_third_href_link(stock_symbol, class_name)
+    if 'error' not in third_href_link:
+        print("Third href link:", third_href_link)
     else:
-        print(sector_and_industry_data['error'])
+        print(third_href_link['error'])
