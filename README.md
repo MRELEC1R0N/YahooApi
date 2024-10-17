@@ -54,7 +54,7 @@ API Endpoints
             symbol (required): The stock symbol of the company.
     - **Example:**
       ```sh
-            curl "http://127.0.0.1:5000/stock?symbol=MSFT"
+      curl "http://127.0.0.1:5000/stock?symbol=MSFT"
       ```
 
 3. **Get Historical Data**
@@ -67,7 +67,7 @@ API Endpoints
         - *interval* (optional): The interval for the historical data (default: 1d).
         - **Example:**
           ```sh
-                curl "http://127.0.0.1:5000/historical?symbol=MSFT&start_date=2023-01-01&end_date=2023-12-31&interval=1d"
+          curl "http://127.0.0.1:5000/historical?symbol=MSFT&start_date=2023-01-01&end_date=2023-12-31&interval=1d"
           ```
 
 
@@ -89,5 +89,5 @@ API Endpoints
         - *includ*e_historical (optional): Whether to include historical data (default: false).
     - **Example:**
       ```sh
-            curl "http://127.0.0.1:5000/compare?symbol=MSFT&num_companies=5&include_historical=true"
+      curl "http://127.0.0.1:5000/compare?symbol=MSFT&num_companies=5&include_historical=true"
       ```
